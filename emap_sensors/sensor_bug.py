@@ -11,17 +11,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# bscan.py - Simple bluetooth LE scanner and data extractor
 
 from bluepy.btle import Scanner, DefaultDelegate
 import time
-#import pymysql
 import struct
-
-hostname = 'localhost'
-username = 'datasrc'
-password = 'datasrc000'
-database = 'bleSensor'
 
 #Enter the MAC address of the sensor from the lescan
 SENSOR_ADDRESS = ["ec:fe:7e:10:91:1d", "ec:fe:7e:10:91:1d"]
@@ -43,15 +36,7 @@ class ScanDelegate(DefaultDelegate):
         elif isNewData:
             print "Received new data from", dev.addr
 
-def doQueryInsert (conn, addr, loc, temp, accero):
-    #blesensor table is date, time, addr, location, temp, accero
-    cur = conn.cursor()
-    dostr = 'INSERT INTO data VALUES (CURRENT_DATE(), NOW(), %s, %s, %s, %s);'
-    cur.execute (dostr, (addr, loc, temp, accero))
-    conn.commit()
-
 scanner = Scanner().withDelegate(ScanDelegate())
-#myConnection = pymysql.connect (host=hostname, user=username, passwd=password, db=database)
 
 ManuDataHex = []
 ReadLoop = True
@@ -126,7 +111,6 @@ try:
                     print "Config Counter: " + str(ConfigCounter)
                     print "Accelero Data: " + hex(AcceleroType) + " " + hex(AcceleroData)
                     print "Temp Data: " + str(TempData)
-#                    doQueryInsert(myConnection, CurrentDevAddr, CurrentDevLoc, TempData, AcceleroData) 
                     ReadLoop = False
     
 except DecodeErrorException:
